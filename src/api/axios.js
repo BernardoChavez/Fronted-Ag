@@ -6,17 +6,17 @@ const api = axios.create({
     headers: {
         'Content-Type': 'application/json',
     },
-    withCredentials: false, // Cambiar a false para JWT
+    withCredentials: false,
+    timeout: 10000,
 });
 
-// Interceptor para requests
 api.interceptors.request.use(
     (config) => {
-        // Agregar token de autenticación si existe
         const token = localStorage.getItem('access_token');
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }
+        console.log('Request a:', config.baseURL + config.url);
         return config;
     },
     (error) => {
@@ -24,18 +24,31 @@ api.interceptors.request.use(
     }
 );
 
-// Interceptor para responses
 api.interceptors.response.use(
     (response) => {
+        console.log('Response de:', response.config.url, 'Status:', response.status);
         return response;
     },
     (error) => {
-        // Manejar errores de autenticación
+        console.log('Error en:', error.config?.url, 'Status:', error.response?.status);
         if (error.response?.status === 401) {
             localStorage.removeItem('access_token');
             localStorage.removeItem('refresh_token');
-            window.location.href = '/login';
+            localStorage.removeItem('user_id');
+            localStorage.removeItem('username');
+            localStorage.removeItem('email');
+            localStorage.removeItem('telefono');
+            localStorage.removeItem('direccion');
+            
+            if (window.location.pathname !== '/login') {
+                window.location.href = '/login';
+            }
         }
+
+        if (!error.response) {
+            console.error('Error de conexión con el servidor');
+        }
+
         return Promise.reject(error);
     }
 );

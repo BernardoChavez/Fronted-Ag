@@ -8,12 +8,9 @@ import './assets/dashboard.css';
 import Footer from './assets/footer.jsx';
 import Login from './assets/login.jsx';
 import Register from './assets/register.jsx';
-import Dashboard from './components/Dashboard.jsx';
 
 import { AuthProvider } from './hooks/useAuth.jsx';
-import ProtectedRoute from './components/ProtectedRoute';
 
-// Imágenes
 import logo from './assets/img/logoag.png';
 import logo1 from './assets/img/logo1.png';
 import banner from './assets/img/banner.png';
@@ -21,7 +18,6 @@ import principal from './assets/img/principal.png';
 import testimonio1 from './assets/img/testimonios/chef.jpg';
 import testimonio2 from './assets/img/testimonios/chefpan.jpeg';
 
-// Carrusel imágenes
 import img1 from './assets/img/cocina/cocina.png';
 import img2 from './assets/img/cocina/freidora.jpg';
 import img3 from './assets/img/cocina/horno.png';
@@ -40,12 +36,12 @@ const Home = () => {
   const [indexCocina, setIndexCocina] = React.useState(0);
   const [indexFrio, setIndexFrio] = React.useState(0);
   const [indexSoldadura, setIndexSoldadura] = React.useState(0);
+  const { user, isAuthenticated } = useAuth();
 
   const cocinaImgs = [img1, img2, img3, img4];
   const frioImgs = [frio1, frio2, frio3, frio4];
   const soldaduraImgs = [sold1, sold2, sold3];
 
-  // Carruseles
   React.useEffect(() => {
     const timer = setInterval(() => {
       setIndexCocina((prev) => (prev + 1) % cocinaImgs.length);
@@ -69,22 +65,92 @@ const Home = () => {
 
   return (
     <>
-      {/* Encabezado */}
       <header className="header">
         <div className="logo">
           <img src={logo} alt="Logo AG Mantenimiento" />
           <h1>Mantenimiento industrial</h1>
         </div>
-        <nav className="navbar">
-          <a href="#servicios">Servicios que Ofrecemos</a>
-          <a href="#nosotros">Acerca de Nosotros</a>
-          <a href="#contacto">Contáctanos</a>
-          <Link to="/login">Iniciar Sesión</Link>
-          <Link to="/register" className="signup">Sign Up</Link>
+        <nav className="navbar" style={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'space-between',
+          width: '100%'
+        }}>
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '20px',
+            position: 'absolute',
+            left: '50%',
+            transform: 'translateX(-50%)'
+          }}>
+            <a href="#servicios">Servicios que Ofrecemos</a>
+            <a href="#nosotros">Acerca de Nosotros</a>
+            <a href="#contacto">Contáctanos</a>
+          </div>
+          
+          {isAuthenticated ? (
+            <div style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '15px',
+              marginLeft: 'auto'
+            }}>
+              <span style={{ 
+                fontSize: '18px',
+                backgroundColor: '#007bff',
+                color: 'white',
+                borderRadius: '50%',
+                width: '35px',
+                height: '35px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontWeight: 'bold',
+                cursor: 'pointer',
+                border: '2px solid #0056b3'
+              }}>
+                {user?.username?.charAt(0)?.toUpperCase() || 'U'}
+              </span>
+              <button 
+                onClick={() => {
+                  localStorage.removeItem('access_token');
+                  localStorage.removeItem('refresh_token');
+                  localStorage.removeItem('user_id');
+                  localStorage.removeItem('username');
+                  localStorage.removeItem('email');
+                  localStorage.removeItem('telefono');
+                  localStorage.removeItem('direccion');
+                  window.location.reload();
+                }}
+                style={{ 
+                  backgroundColor: '#dc3545', 
+                  color: 'white', 
+                  padding: '8px 16px', 
+                  borderRadius: '4px', 
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontWeight: 'bold',
+                  fontSize: '14px'
+                }}
+              >
+                Cerrar Sesión
+              </button>
+            </div>
+          ) : (
+            <div style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '15px',
+              marginLeft: 'auto'
+            }}>
+              <Link to="/login">Iniciar Sesión</Link>
+              <Link to="/register" className="signup">Sign Up</Link>
+            </div>
+          )}
         </nav>
       </header>
 
-      {/* HERO */}
       <section 
         className="hero" 
         onClick={() => window.open('https://api.whatsapp.com/send?phone=+59170000000&text=Hola, quiero solicitar un servicio', '_blank')}
@@ -92,7 +158,6 @@ const Home = () => {
         <img src={banner} className="hero-bg" alt="Técnico trabajando" />
       </section>
 
-      {/* Bienvenida */}
       <main className="contenido">
         <div className="texto">
           <h2>Bienvenido a AG Mantenimiento</h2>
@@ -107,11 +172,9 @@ const Home = () => {
         </div>
       </main>
 
-      {/* Servicios */}
       <section className="servicios" id="servicios">
         <h2>SERVICIOS QUE OFRECEMOS</h2>
 
-        {/* Cocina */}
         <div className="servicio-bloque">
           <h3>Mantenimiento de Maquinaria de Cocina</h3>
           <div className="servicios-lista">
@@ -133,7 +196,6 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Frío */}
         <div className="servicio-bloque">
           <h3>Mantenimiento de Equipos del Sector Frío</h3>
           <div className="servicios-lista">
@@ -155,7 +217,6 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Soldadura */}
         <div className="servicio-bloque">
           <h3>Servicio de Soldadura TIG</h3>
           <div className="servicios-lista">
@@ -178,7 +239,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Nosotros */}
       <section className="nosotros" id="nosotros">
         <h2>¿QUIENES SOMOS?</h2>
         <p>En <strong>AG Mantenimiento</strong> comenzamos con una idea clara: brindar un servicio técnico confiable,
@@ -202,12 +262,11 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Testimonios */}
       <section className="testimonios">
         <h2>TESTIMONIOS</h2>
         <div className="testimonio">
           <div className="testimonio-texto">
-            <p><strong>“Hace años trabajamos con ellos. Nunca fallan. Nos hacen mantenimiento preventivo mensual y nuestros equipos funcionan perfecto.”</strong></p>
+            <p><strong>"Hace años trabajamos con ellos. Nunca fallan. Nos hacen mantenimiento preventivo mensual y nuestros equipos funcionan perfecto."</strong></p>
             <p>— Gabriela Hurtado</p>
           </div>
           <img src={testimonio1} alt="Gabriela Hurtado" />
@@ -215,7 +274,7 @@ const Home = () => {
         <div className="divider-enfatizada"></div>
         <div className="testimonio">
           <div className="testimonio-texto">
-            <p><strong>“Nos diseñaron un horno a medida que ha mejorado nuestra producción. Excelente acabado y servicio postventa.”</strong></p>
+            <p><strong>"Nos diseñaron un horno a medida que ha mejorado nuestra producción. Excelente acabado y servicio postventa."</strong></p>
             <p>— Luis Rojas</p>
           </div>
           <img src={testimonio2} alt="Luis Rojas" />
@@ -228,7 +287,6 @@ const Home = () => {
   );
 };
 
-// RENDER CON RUTAS
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <AuthProvider>
@@ -237,11 +295,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/dashboard" element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          } />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

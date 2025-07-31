@@ -19,6 +19,7 @@ const Register = () => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    clearError();
     
     const validationRules = {
       username: { required: true },
@@ -33,11 +34,17 @@ const Register = () => {
     }
 
     setLoading(true);
+    console.log('Intentando registro con:', formData.username);
+    
     try {
-      await register(formData);
-      // Redirigir al login después del registro exitoso
-      navigate('/login');
+      const response = await register(formData);
+      console.log('Registro exitoso:', response.data);
+      
+      setTimeout(() => {
+        navigate('/login');
+      }, 2000);
     } catch (err) {
+      console.error('Error en registro:', err);
       handleError(err);
     } finally {
       setLoading(false);

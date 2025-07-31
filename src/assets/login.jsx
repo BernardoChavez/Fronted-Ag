@@ -17,6 +17,7 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    clearError();
     
     const validationRules = {
       username: { required: true },
@@ -28,10 +29,17 @@ const Login = () => {
     }
 
     setLoading(true);
+    console.log('Intentando login con:', formData.username);
+    
     try {
-      await login(formData);
-      navigate('/'); // Cambiar a la página principal
+      const response = await login(formData);
+      console.log('Login exitoso:', response.data);
+      
+      setTimeout(() => {
+        navigate('/');
+      }, 1500);
     } catch (err) {
+      console.error('Error en login:', err);
       handleError(err);
     } finally {
       setLoading(false);

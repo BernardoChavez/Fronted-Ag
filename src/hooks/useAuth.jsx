@@ -16,11 +16,22 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const refreshToken = async () => {
+        try {
+            const refresh = localStorage.getItem('refresh_token');
+            if (!refresh) {
+                throw new Error('No hay refresh token');
+            }
+            return true;
+        } catch (err) {
+            return false;
+        }
+    };
+
     useEffect(() => {
-        // Verificar si hay un token al cargar la app
         const accessToken = localStorage.getItem('access_token');
+        
         if (accessToken) {
-            // Reconstruir el usuario desde los datos del token
             const userData = {
                 id: localStorage.getItem('user_id'),
                 username: localStorage.getItem('username'),
@@ -28,7 +39,35 @@ export const AuthProvider = ({ children }) => {
                 telefono: localStorage.getItem('telefono'),
                 direccion: localStorage.getItem('direccion')
             };
-            setUser(userData);
+            
+            if (userData.username) {
+                setUser(userData);
+                console.log('Usuario autenticado:', userData.username);
+            } else {
+                localStorage.removeItem('access_token');
+                localStorage.removeItem('refresh_token');
+                localStorage.removeItem('user_id');
+                localStorage.removeItem('username');
+                localStorage.removeItem('email');
+                localStorage.removeItem('telefono');
+                localStorage.removeItem('direccion');
+                console.log('Token inválido, limpiando datos');
+            }
+            
+            try {
+                const tokenData = JSON.parse(atob(accessToken.split('.')[1]));
+                const expirationTime = tokenData.exp * 1000;
+                const currentTime = Date.now();
+                const timeUntilExpiry = expirationTime - currentTime;
+                
+                if (timeUntilExpiry < 5 * 60 * 1000) {
+                    refreshToken();
+                }
+            } catch (err) {
+                console.error('Error al verificar token:', err);
+            }
+        } else {
+            console.log('No hay usuario autenticado');
         }
         setLoading(false);
     }, []);
@@ -36,21 +75,19 @@ export const AuthProvider = ({ children }) => {
     const login = async (credentials) => {
         try {
             setError(null);
+            setLoading(true);
+            
             const response = await loginApi(credentials);
             const { access, refresh, user_id, username, email, telefono, direccion } = response.data;
             
-            // Guardar tokens
             localStorage.setItem('access_token', access);
             localStorage.setItem('refresh_token', refresh);
-            
-            // Guardar datos del usuario
             localStorage.setItem('user_id', user_id);
             localStorage.setItem('username', username);
             localStorage.setItem('email', email);
             localStorage.setItem('telefono', telefono || '');
             localStorage.setItem('direccion', direccion || '');
             
-            // Establecer usuario en estado
             const userData = {
                 id: user_id,
                 username,
@@ -59,10 +96,16 @@ export const AuthProvider = ({ children }) => {
                 direccion: direccion || ''
             };
             setUser(userData);
+            
             return response;
         } catch (err) {
-            setError(err.response?.data?.detail || 'Error al iniciar sesión');
+            const errorMessage = err.response?.data?.detail || 
+                               err.response?.data?.message || 
+                               'Error al iniciar sesión';
+            setError(errorMessage);
             throw err;
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -75,7 +118,6 @@ export const AuthProvider = ({ children }) => {
         } catch (err) {
             console.error('Error en logout:', err);
         } finally {
-            // Limpiar todos los datos
             localStorage.removeItem('access_token');
             localStorage.removeItem('refresh_token');
             localStorage.removeItem('user_id');
@@ -93,6 +135,7 @@ export const AuthProvider = ({ children }) => {
         error,
         login,
         logout,
+        refreshToken,
         isAuthenticated: !!user
     };
 
