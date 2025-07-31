@@ -9,7 +9,7 @@ import Footer from './assets/footer.jsx';
 import Login from './assets/login.jsx';
 import Register from './assets/register.jsx';
 import Dashboard from './components/Dashboard.jsx';
-import Navigation from './components/Navigation.jsx';
+
 import { AuthProvider } from './hooks/useAuth.jsx';
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -75,7 +75,13 @@ const Home = () => {
           <img src={logo} alt="Logo AG Mantenimiento" />
           <h1>Mantenimiento industrial</h1>
         </div>
-        <Navigation />
+        <nav className="navbar">
+          <a href="#servicios">Servicios que Ofrecemos</a>
+          <a href="#nosotros">Acerca de Nosotros</a>
+          <a href="#contacto">Contáctanos</a>
+          <Link to="/login">Iniciar Sesión</Link>
+          <Link to="/register" className="signup">Sign Up</Link>
+        </nav>
       </header>
 
       {/* HERO */}
