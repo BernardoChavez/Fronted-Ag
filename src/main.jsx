@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { useAuth } from './hooks/useAuth.jsx';
 
 import './assets/index.css';
 import './assets/dashboard.css';
@@ -8,6 +9,7 @@ import Footer from './assets/footer.jsx';
 import Login from './assets/login.jsx';
 import Register from './assets/register.jsx';
 import Dashboard from './components/Dashboard.jsx';
+import Navigation from './components/Navigation.jsx';
 import { AuthProvider } from './hooks/useAuth.jsx';
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -35,7 +37,6 @@ import sold2 from './assets/img/tig/sanitario.jpg';
 import sold3 from './assets/img/tig/soldadura.jpg';
 
 const Home = () => {
-  const { user, logout } = useAuth();
   const [indexCocina, setIndexCocina] = React.useState(0);
   const [indexFrio, setIndexFrio] = React.useState(0);
   const [indexSoldadura, setIndexSoldadura] = React.useState(0);
@@ -74,22 +75,7 @@ const Home = () => {
           <img src={logo} alt="Logo AG Mantenimiento" />
           <h1>Mantenimiento industrial</h1>
         </div>
-        <nav className="navbar">
-          <a href="#servicios">Servicios que Ofrecemos</a>
-          <a href="#nosotros">Acerca de Nosotros</a>
-          <a href="#contacto">Contáctanos</a>
-          {user ? (
-            <>
-              <span>Bienvenido, {user.username}</span>
-              <button onClick={logout} className="logout-btn">Cerrar Sesión</button>
-            </>
-          ) : (
-            <>
-              <Link to="/login">Iniciar Sesión</Link>
-              <Link to="/register" className="signup">Sign Up</Link>
-            </>
-          )}
-        </nav>
+        <Navigation />
       </header>
 
       {/* HERO */}
