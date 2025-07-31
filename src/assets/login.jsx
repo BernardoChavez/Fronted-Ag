@@ -1,35 +1,102 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth.jsx';
+import { useApiError } from '../hooks/useApiError';
+import { useForm } from '../hooks/useForm';
 import logo from './img/logoag.png';
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login, error: authError } = useAuth();
+  const { error: apiError, handleError, clearError } = useApiError();
+  const { formData, errors, handleInputChange, validateForm } = useForm({
+    username: '',
+    password: ''
+  });
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = () => {
-    // Simulación de inicio de sesión sin validación
-    navigate('/');
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    
+    const validationRules = {
+      username: { required: true },
+      password: { required: true, minLength: 6 }
+    };
+    
+    if (!validateForm(validationRules)) {
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await login(formData);
+      navigate('/dashboard');
+    } catch (err) {
+      handleError(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const goToRegister = () => {
     navigate('/register');
   };
 
+  const errorMessage = authError || apiError;
+
   return (
     <section className="auth-form" style={{ backgroundColor: '#fff', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <div className="form-container" style={{ maxWidth: '400px', width: '100%', textAlign: 'center' }}>
         <img src={logo} alt="Logo" className="form-logo" style={{ width: '80px', marginBottom: '15px' }} />
         <h2 style={{ marginBottom: '20px' }}>SERVICIO DE MANTENIMIENTO INDUSTRIAL</h2>
-        <form>
-          <label>EMAIL</label>
-          <input type="email" placeholder="Correo electrónico" />
+        
+        {errorMessage && (
+          <div style={{ 
+            backgroundColor: '#f8d7da', 
+            color: '#721c24', 
+            padding: '10px', 
+            borderRadius: '4px', 
+            marginBottom: '15px',
+            fontSize: '14px'
+          }}>
+            {errorMessage}
+          </div>
+        )}
+
+        <form onSubmit={handleLogin}>
+          <label>USUARIO</label>
+          <input 
+            type="text" 
+            name="username"
+            placeholder="Nombre de usuario" 
+            value={formData.username}
+            onChange={handleInputChange}
+            disabled={loading}
+            className={errors.username ? 'error' : ''}
+          />
+          {errors.username && <span className="error-text">{errors.username}</span>}
 
           <label>PASSWORD</label>
-          <input type="password" placeholder="Contraseña" />
+          <input 
+            type="password" 
+            name="password"
+            placeholder="Contraseña" 
+            value={formData.password}
+            onChange={handleInputChange}
+            disabled={loading}
+            className={errors.password ? 'error' : ''}
+          />
+          {errors.password && <span className="error-text">{errors.password}</span>}
 
           <a href="#" className="forgot">¿Olvidaste tu contraseña?</a>
 
-          <button type="button" onClick={handleLogin} className="btn-submit" style={{ marginTop: '15px' }}>
-            INICIAR SESIÓN
+          <button 
+            type="submit" 
+            className="btn-submit" 
+            style={{ marginTop: '15px' }}
+            disabled={loading}
+          >
+            {loading ? 'INICIANDO SESIÓN...' : 'INICIAR SESIÓN'}
           </button>
         </form>
 

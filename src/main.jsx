@@ -3,9 +3,13 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 
 import './assets/index.css';
+import './assets/dashboard.css';
 import Footer from './assets/footer.jsx';
 import Login from './assets/login.jsx';
 import Register from './assets/register.jsx';
+import Dashboard from './components/Dashboard.jsx';
+import { AuthProvider } from './hooks/useAuth.jsx';
+import ProtectedRoute from './components/ProtectedRoute';
 
 // Imágenes
 import logo from './assets/img/logoag.png';
@@ -225,12 +229,19 @@ const Home = () => {
 // RENDER CON RUTAS
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/dashboard" element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          } />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   </React.StrictMode>
 );
