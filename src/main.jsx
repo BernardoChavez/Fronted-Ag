@@ -153,7 +153,7 @@ const Home = () => {
 
       <section 
         className="hero" 
-        onClick={() => window.open('https://api.whatsapp.com/send?phone=+59170000000&text=Hola, quiero solicitar un servicio', '_blank')}
+        onClick={() => window.open('https://api.whatsapp.com/send?phone=+59178593512&text=Hola, quiero solicitar un servicio', '_blank')}
       >
         <img src={banner} className="hero-bg" alt="Técnico trabajando" />
       </section>
