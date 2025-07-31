@@ -35,6 +35,7 @@ import sold2 from './assets/img/tig/sanitario.jpg';
 import sold3 from './assets/img/tig/soldadura.jpg';
 
 const Home = () => {
+  const { user, logout } = useAuth();
   const [indexCocina, setIndexCocina] = React.useState(0);
   const [indexFrio, setIndexFrio] = React.useState(0);
   const [indexSoldadura, setIndexSoldadura] = React.useState(0);
@@ -77,8 +78,17 @@ const Home = () => {
           <a href="#servicios">Servicios que Ofrecemos</a>
           <a href="#nosotros">Acerca de Nosotros</a>
           <a href="#contacto">Contáctanos</a>
-          <Link to="/login">Iniciar Sesión</Link>
-          <Link to="/register" className="signup">Sign Up</Link>
+          {user ? (
+            <>
+              <span>Bienvenido, {user.username}</span>
+              <button onClick={logout} className="logout-btn">Cerrar Sesión</button>
+            </>
+          ) : (
+            <>
+              <Link to="/login">Iniciar Sesión</Link>
+              <Link to="/register" className="signup">Sign Up</Link>
+            </>
+          )}
         </nav>
       </header>
 

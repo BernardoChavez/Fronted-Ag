@@ -30,7 +30,7 @@ const Login = () => {
     setLoading(true);
     try {
       await login(formData);
-      navigate('/dashboard');
+      navigate('/'); // Cambiar a la página principal
     } catch (err) {
       handleError(err);
     } finally {
