@@ -259,7 +259,7 @@ const Home = () => {
         </div>
         <div className="divider-enfatizada"></div>
       </section>
-
+      
     </div>
     <Footer />
     </>

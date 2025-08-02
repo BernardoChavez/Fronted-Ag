@@ -110,7 +110,7 @@ const Login = () => {
 
         <p style={{ marginTop: '20px' }}>
           ¿No tienes una cuenta?{' '}
-          <button onClick={goToRegister} style={{ background: 'none', border: 'none', color: '#007bff', cursor: 'pointer', textDecoration: 'underline' }}>
+          <button onClick={goToRegister} style={{ background: 'none', border: 'none', color: '#ffffff', cursor: 'pointer', textDecoration: 'underline' }}>
             Regístrate
           </button>
         </p>

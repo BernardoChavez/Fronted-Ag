@@ -145,7 +145,7 @@ const Register = () => {
           </button>
         </form>
         <p style={{ marginTop: "15px" }}>
-          ¿Ya tienes una cuenta? <Link to="/login">Inicia sesión</Link>
+          ¿Ya tienes una cuenta? <Link to="/login">Inicia sesión </Link>
         </p>
       </div>
     </section>
