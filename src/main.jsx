@@ -65,37 +65,21 @@ const Home = () => {
 
   return (
     <>
+    <div className="main-container">
       <header className="header">
         <div className="logo">
           <img src={logo} alt="Logo AG Mantenimiento" />
           <h1>Mantenimiento industrial</h1>
         </div>
-        <nav className="navbar" style={{ 
-          display: 'flex', 
-          alignItems: 'center', 
-          justifyContent: 'space-between',
-          width: '100%'
-        }}>
-          <div style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '20px',
-            position: 'absolute',
-            left: '50%',
-            transform: 'translateX(-50%)'
-          }}>
+        <nav className="navbar">
+          <div className="navbar-links">
             <a href="#servicios">Servicios que Ofrecemos</a>
             <a href="#nosotros">Acerca de Nosotros</a>
             <a href="#contacto">Contáctanos</a>
           </div>
           
           {isAuthenticated ? (
-            <div style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              gap: '15px',
-              marginLeft: 'auto'
-            }}>
+            <div className="navbar-auth">
               <span style={{ 
                 fontSize: '18px',
                 backgroundColor: '#007bff',
@@ -138,12 +122,7 @@ const Home = () => {
               </button>
             </div>
           ) : (
-            <div style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              gap: '15px',
-              marginLeft: 'auto'
-            }}>
+            <div className="navbar-auth">
               <Link to="/login">Iniciar Sesión</Link>
               <Link to="/register" className="signup">Sign Up</Link>
             </div>
@@ -223,7 +202,6 @@ const Home = () => {
             <span>Soldadura en acero inoxidable</span>
             <span>Diseño y fabricación personalizada</span>
             <span>Reparaciones estructurales</span>
-            <span>Acabados de alta precisión</span>
           </div>
           <div className="carrusel">
             {soldaduraImgs.map((img, index) => {
@@ -242,11 +220,11 @@ const Home = () => {
       <section className="nosotros" id="nosotros">
         <h2>¿QUIENES SOMOS?</h2>
         <p>En <strong>AG Mantenimiento</strong> comenzamos con una idea clara: brindar un servicio técnico confiable,
-    especializado y enfocado en el rubro gastronómico. Desde entonces, hemos crecido gracias a la confianza
-    de nuestros clientes, convirtiéndonos en aliados estratégicos de restaurantes, hoteles, fábricas de alimentos
-    y empresas de catering. Contamos con un equipo multidisciplinario formado por técnicos mecánicos, soldadores
-    certificados y especialistas en frío y gas. Creemos en la mejora continua y en la atención al detalle.
-    </p>
+        especializado y enfocado en el rubro gastronómico. Desde entonces, hemos crecido gracias a la confianza
+        de nuestros clientes, convirtiéndonos en aliados estratégicos de restaurantes, hoteles, fábricas de alimentos
+        y empresas de catering. Contamos con un equipo multidisciplinario formado por técnicos mecánicos, soldadores
+        certificados y especialistas en frío y gas. Creemos en la mejora continua y en la atención al detalle.
+        </p>
         <div className="nosotros-detalle">
           <div className="valores">
             <h3>Nuestros valores:</h3>
@@ -282,7 +260,8 @@ const Home = () => {
         <div className="divider-enfatizada"></div>
       </section>
 
-      <Footer />
+    </div>
+    <Footer />
     </>
   );
 };
